@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="1000.0" fitWidth="635.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../Assets/background.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="152.0" fitWidth="136.0" layoutX="249.0" layoutY="782.0" pickOnBounds="true" preserveRatio="true" rotate="45.0">
+         <image>
+            <Image url="@../../../Assets/dead.png" />
+         </image>
+         <effect>
+            <Glow />
+         </effect>
+      </ImageView>
+      <ImageView fitHeight="108.0" fitWidth="90.0" layoutX="83.0" layoutY="501.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../Assets/restart.png" />
+         </image>
+         <effect>
+            <Glow />
+         </effect>
+      </ImageView>
+      <ImageView fitHeight="151.0" fitWidth="154.0" layoutX="240.0" layoutY="462.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../Assets/revive.png" />
+         </image>
+         <effect>
+            <DropShadow />
+         </effect>
+      </ImageView>
+      <ImageView fitHeight="119.0" fitWidth="113.0" layoutX="448.0" layoutY="481.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../Assets/home.png" />
+         </image>
+         <effect>
+            <Glow />
+         </effect>
+      </ImageView>
+      <Text fill="WHITE" layoutX="240.0" layoutY="86.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Best Score" wrappingWidth="197.8030661360567">
+         <font>
+            <Font size="35.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Text>
+      <Text fill="WHITE" layoutX="240.0" layoutY="271.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Score" wrappingWidth="197.8030661360567">
+         <font>
+            <Font size="35.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Text>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="65.0" layoutX="225.0" layoutY="104.0" opacity="0.82" stroke="BLACK" strokeType="INSIDE" width="198.0">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Rectangle>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="65.0" layoutX="225.0" layoutY="294.0" opacity="0.82" stroke="BLACK" strokeType="INSIDE" width="198.0">
+         <effect>
+            <DropShadow />
+         </effect>
+      </Rectangle>
+   </children>
+</AnchorPane>
