@@ -3,6 +3,8 @@ package com.example.stickhero;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Rectangle;
 
 import java.io.IOException;
 
@@ -48,5 +50,11 @@ public class Cherries {
         }
     }
 
-
+    public static void checkCollision(AnchorPane ap, Rectangle p){
+        if(ap.getBoundsInParent().intersects(p.getBoundsInParent())&& OurHero.isFlipped()){
+            SceneManager.setContinueflag(false);
+            SceneManager.setTransflag(false);
+            OurHero.setFlipped(false);
+        }
+    }
 }
