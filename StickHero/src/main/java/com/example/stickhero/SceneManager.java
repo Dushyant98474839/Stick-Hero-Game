@@ -276,17 +276,11 @@ public class SceneManager {
     AnimationTimer collisiontimer=new AnimationTimer() {
         @Override
         public void handle(long l) {
-            checkCollision(ap,Pillars.getLastpillar());
+            Cherries.checkCollision(ap,Pillars.getLastpillar());
         }
     };
 
-    public void checkCollision(AnchorPane ap,Rectangle p){
-        if(ap.getBoundsInParent().intersects(p.getBoundsInParent())&& OurHero.isFlipped()){
-            continueflag=false;
-            transflag=false;
-            OurHero.setFlipped(false);
-        }
-    }
+
     AnimationTimer collisiontimerCherry=new AnimationTimer() {
         @Override
         public void handle(long l) {
