@@ -22,8 +22,17 @@ import static com.example.stickhero.SceneManager.width;
 import static javafx.application.Application.launch;
 
 public class Menu {
-    private static Stage primaryStage;
+//    private static Stage primaryStage;
     private static AnchorPane root;
+    private static Scene scene;
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void setScene(Scene scene) {
+        Menu.scene = scene;
+    }
 
     public static AnchorPane getRoot() {
         return root;
@@ -33,23 +42,24 @@ public class Menu {
         Menu.root = root;
     }
 
-    public static void setPrimaryStage(Stage primaryStage) {
-        Menu.primaryStage = primaryStage;
-    }
-
-    public static Stage getPrimaryStage() {
-        return primaryStage;
-    }
+//    public static void setPrimaryStage(Stage primaryStage) {
+//        Menu.primaryStage = primaryStage;
+//    }
+//
+//    public static Stage getPrimaryStage() {
+//        return primaryStage;
+//    }
 
     public Menu() {
         menuScreen();
     }
 
+
     public void menuScreen() {
-        primaryStage=new Stage();
+//        primaryStage=new Stage();
         root = new AnchorPane();
 
-        Image image = new Image("file:///D:\\JAVA PRJ\\StickHero\\src\\main\\resources\\Assets\\background.png");
+        Image image = new Image("/background.png");
         // new BackgroundSize(width, height, widthAsPercentage, heightAsPercentage, contain, cover)
         BackgroundSize backgroundSize = new BackgroundSize(width, height, false, false, true, true);
         // new BackgroundImage(image, repeatX, repeatY, position, size)
@@ -144,11 +154,11 @@ public class Menu {
         textGroup.setLayoutX(153.0);
         textGroup.setLayoutY(142.0);
         Text stickText = new Text("STICK");
-        //Font font1 =Font.loadFont("file:///D:\\JAVA PRJ\\StickHero\\src\\main\\resources\\Assets\\vaca.ttf",72);
+        Font f1=Font.loadFont("vaca.ttf",72);
 
-               stickText.setFont(Font.font("Grinched"));
-        //stickText.setFont(new Font("vaca.ttf",96));
-        stickText.setStyle("-fx-font-family:Grinched; -fx-font-size: 76pt");
+        //stickText.setFont(Font.font("GrinchedRegular"));
+        stickText.setFont(new Font(String.valueOf(f1),102));
+        //stickText.setStyle("-fx-font-family:; -fx-font-size: 76pt");
         stickText.setWrappingWidth(310.39111328125);
         stickText.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
@@ -157,8 +167,8 @@ public class Menu {
         //Font.loadFont(getClass().getResourceAsStream("file:///D:\\JAVA PRJ\\StickHero\\src\\main\\resources\\Assets\\vaca.ttf"), 72);
         //heroText.setFont(new Font("Serif",  36));
 
-        heroText.setStyle("-fx-font-family:Grinched; -font-size: 76pt");
-        heroText.setFont(new Font(126.0));
+        //heroText.setStyle("-fx-font-family:Grinched; -font-size: 70pt");
+        heroText.setFont(new Font(106.0));
         heroText.setLayoutY(125.58203125);
         heroText.setWrappingWidth(310.39111328125);
         heroText.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
@@ -188,6 +198,7 @@ public class Menu {
             RealSceneMangaer rg=new RealSceneMangaer();
             try {
                 //SceneManager.setToDefault();
+                RealSceneMangaer.c=0;
                 rg.switchToGame();
 //                primaryStage.close();
             } catch (IOException e) {
@@ -199,6 +210,7 @@ public class Menu {
             RealSceneMangaer rg=new RealSceneMangaer();
             try {
                 //SceneManager.setToDefault();
+                RealSceneMangaer.c=0;
                 rg.switchToGame();
 //                primaryStage.close();
             } catch (IOException e) {
@@ -209,19 +221,19 @@ public class Menu {
 
         Group helpGroup = new Group();
         helpGroup.setLayoutX(-6.0);
-        helpGroup.setLayoutY(806.0);
+        helpGroup.setLayoutY(706.0);
 
         Circle helpCircle = new Circle(34.0, Color.rgb(60, 48, 50, 0.93));
         helpCircle.setStroke(Color.rgb(181, 81, 107));
         helpCircle.setStrokeWidth(0.0);
         helpCircle.setLayoutX(119.0);
-        helpCircle.setLayoutY(2.0);
+        helpCircle.setLayoutY(-98.0);
 
         Text helpText = new Text("?");
         helpText.setFill(Color.WHITE);
         helpText.setFont(new Font(45.0));
         helpText.setLayoutX(83.0);
-        helpText.setLayoutY(16.0);
+        helpText.setLayoutY(-84.0);
         helpText.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
         helpText.setWrappingWidth(75.72442245483398);
 
@@ -230,25 +242,25 @@ public class Menu {
 
         Group statsGroup = new Group();
         statsGroup.setLayoutX(463.0);
-        statsGroup.setLayoutY(772.0);
+        statsGroup.setLayoutY(678.0);
 
         Circle statsCircle = new Circle(34.0, Color.rgb(45, 38, 39, 0.93));
         statsCircle.setLayoutX(34.0);
-        statsCircle.setLayoutY(34.0);
+        statsCircle.setLayoutY(-66.0);
         statsCircle.setStroke(Color.rgb(181, 81, 107));
         statsCircle.setStrokeWidth(0.0);
 
-        Rectangle statsRectangle1 = new Rectangle(28.0, 9.0, 12.0, 49.0);
+        Rectangle statsRectangle1 = new Rectangle(28.0, -91.0, 12.0, 49.0);
         statsRectangle1.setFill(Color.WHITE);
         statsRectangle1.setStroke(Color.BLACK);
         //statsRectangle1.setStrokeType(Rectangle.StrokeType.INSIDE);
 
-        Rectangle statsRectangle2 = new Rectangle(41.0, 36.0, 12.0, 22.0);
+        Rectangle statsRectangle2 = new Rectangle(41.0, -64.0, 12.0, 22.0);
         statsRectangle2.setFill(Color.WHITE);
         statsRectangle2.setStroke(Color.BLACK);
         //statsRectangle2.setStrokeType(Rectangle.StrokeType.INSIDE);
 
-        Rectangle statsRectangle3 = new Rectangle(15.0, 24.0, 12.0, 34.0);
+        Rectangle statsRectangle3 = new Rectangle(15.0, -76.0, 12.0, 34.0);
         statsRectangle3.setFill(Color.WHITE);
         statsRectangle3.setStroke(Color.BLACK);
         //statsRectangle3.setStrokeType(Rectangle.StrokeType.INSIDE);
@@ -257,12 +269,12 @@ public class Menu {
         saveCircle.setStroke(Color.rgb(181, 81, 107));
         saveCircle.setStrokeWidth(0.0);
         saveCircle.setLayoutX(-352.5);
-        saveCircle.setLayoutY(150.0);
+        saveCircle.setLayoutY(50.0);
         Text load = new Text("LOAD");
         load.setFill(Color.WHITE);
         load.setFont(new Font(15.0));
         load.setLayoutX(-390);
-        load.setLayoutY(155.0);
+        load.setLayoutY(55.0);
         load.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
         load.setWrappingWidth(75.72442245483398);
 
@@ -270,14 +282,21 @@ public class Menu {
         exitCircle.setStroke(Color.rgb(181, 81, 107));
         exitCircle.setStrokeWidth(0.0);
         exitCircle.setLayoutX(32.5);
-        exitCircle.setLayoutY(150.0);
+        exitCircle.setLayoutY(50.0);
+        exitCircle.setOnMouseClicked(mouseEvent -> {
+            HelloApplication.close();
+        });
+
         Text exitload = new Text("EXIT");
         exitload.setFill(Color.WHITE);
         exitload.setFont(new Font(17.0));
         exitload.setLayoutX(-7);
-        exitload.setLayoutY(155.0);
+        exitload.setLayoutY(55.0);
         exitload.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
         exitload.setWrappingWidth(75.72442245483398);
+        exitload.setOnMouseClicked(mouseEvent -> {
+            HelloApplication.close();
+        });
 
         statsGroup.getChildren().addAll(statsCircle, statsRectangle1, statsRectangle2, statsRectangle3,saveCircle,load,exitCircle,exitload);
         root.getChildren().add(statsGroup);
@@ -292,7 +311,6 @@ public class Menu {
         translateTransition2.setAutoReverse(true);
         translateTransition2.setCycleCount(TranslateTransition.INDEFINITE);
         translateTransition2.play();
-
-        primaryStage.setScene(new Scene(root, 600, 1000));
+        scene=new Scene(root,600,800);
     }
 }

@@ -3,6 +3,7 @@ package com.example.stickhero;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -65,6 +66,10 @@ public class OurHero {
         //SceneManager.ap.getTransforms().add(new Rotate(-ob.getAngleactual()));
         //System.out.println(SceneManager.rec.getX());
         //System.out.println(SceneManager.ap.getLayoutX());
+        Button b1 = (Button) PauseMenu.root.lookup("#mainmenu");
+        System.out.println(b1);
+        b1.setDisable(true);
+        System.out.println("Disabled");
         TranslateTransition trn0=new TranslateTransition(Duration.millis(300),SceneManager.ap);
         trn0.setByY(-5);
         trn0.play();
@@ -85,6 +90,7 @@ public class OurHero {
             trn.setOnFinished(event -> {
                 SceneManager.setContinueflag(false);
                 Buttons.setCanFlip(false);
+                b1.setDisable(false);
             });
         } else if (SceneManager.rec.getHeight()+SceneManager.rec.getX()+5>Pillars.getLastpillar().getX()+Pillars.getLastpillar().getWidth()) {
             TranslateTransition trn=new TranslateTransition(Duration.millis(500),SceneManager.ap);
@@ -100,6 +106,7 @@ public class OurHero {
                 trn3.setOnFinished(event1 -> {
                     SceneManager.setContinueflag(false);
                     Buttons.setCanFlip(false);
+                    b1.setDisable(false);
                 });
             });
 
@@ -118,9 +125,10 @@ public class OurHero {
                    trn4.play();
                    trn4.setOnFinished(event2 -> {
                        SceneManager.translateAfterLanding();
-                       SceneManager.setTransflag(true);
+                       //SceneManager.setTransflag(true);
                        Buttons.setCanFlip(false);
                        score+=1;
+                       b1.setDisable(false);
                        //SceneManager.returnSticktoDefault();
                        //heromovedflag = true;
 

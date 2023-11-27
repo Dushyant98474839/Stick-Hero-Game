@@ -1,6 +1,3 @@
--Add Cherries
-    -Restart based on cherry count
-
 -Add Mines
     -coordinates just like cherry
     -boom on collision
@@ -12,8 +9,6 @@
 
 -Fix Pillars not generating at times
     -Make pillars translate instead of popping
-
--Fix new window pop up
 
 -Load, save
 
@@ -32,6 +27,12 @@
 
 -add sound effects
 
--Junit and Exceptions
+-Junit
+
+-Exceptions
+
+-Design Patterns
 
 -custom cursor
+
+-do something about the path so that TA don't have to manually change it
