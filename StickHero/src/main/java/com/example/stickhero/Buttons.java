@@ -57,6 +57,7 @@ public class Buttons extends Button {
         setMaxHeight(1000);
         setMinWidth(600);
         setMaxWidth(600);
+        setLayoutY(100);
         setupTimeline();
         initialiseButtonListeners();
     }

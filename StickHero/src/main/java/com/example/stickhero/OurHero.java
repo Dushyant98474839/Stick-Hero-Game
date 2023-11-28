@@ -3,12 +3,14 @@ package com.example.stickhero;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.security.PublicKey;
 
 import static com.example.stickhero.SceneManager.offsetY;
 
@@ -60,22 +62,72 @@ public class OurHero {
         ap=fxmlLoader.load();
         return ap;
     }
+    private static TranslateTransition trn0;
+    private static TranslateTransition trn2;
+    private static TranslateTransition trn;
+    private static TranslateTransition trn3;
+    private static TranslateTransition trn4;
+
+    public static TranslateTransition getTrn0() {
+        return trn0;
+    }
+
+    public static void setTrn0(TranslateTransition trn0) {
+        OurHero.trn0 = trn0;
+    }
+
+    public static TranslateTransition getTrn2() {
+        return trn2;
+    }
+
+    public static void setTrn2(TranslateTransition trn2) {
+        OurHero.trn2 = trn2;
+    }
+
+    public static TranslateTransition getTrn() {
+        return trn;
+    }
+
+    public static void setTrn(TranslateTransition trn) {
+        OurHero.trn = trn;
+    }
+
+    public static TranslateTransition getTrn3() {
+        return trn3;
+    }
+
+    public static void setTrn3(TranslateTransition trn3) {
+        OurHero.trn3 = trn3;
+    }
+
+    public static TranslateTransition getTrn4() {
+        return trn4;
+    }
+
+    public static void setTrn4(TranslateTransition trn4) {
+        OurHero.trn4 = trn4;
+    }
+
     public static void moveHero(){
         Sticks ob=new Sticks();
         //SceneManager.ap.getTransforms().add(new Rotate(-ob.getAngleactual()));
         //System.out.println(SceneManager.rec.getX());
         //System.out.println(SceneManager.ap.getLayoutX());
-        TranslateTransition trn0=new TranslateTransition(Duration.millis(300),SceneManager.ap);
+        Button b1 = (Button) PauseMenu.root.lookup("#mainmenu");
+        System.out.println(b1);
+        //b1.setDisable(true);
+        System.out.println("Disabled");
+        trn0=new TranslateTransition(Duration.millis(300),SceneManager.ap);
         trn0.setByY(-5);
         trn0.play();
         trn0.setOnFinished(eve -> {
-        TranslateTransition trn2=new TranslateTransition(Duration.millis(2000),SceneManager.ap);
+         trn2=new TranslateTransition(Duration.millis(2000),SceneManager.ap);
         trn2.setToX(SceneManager.rec.getHeight()+SceneManager.rec.getX()-50);
 
         trn2.play();
         trn2.setOnFinished(evet -> {
         if(SceneManager.rec.getHeight()+SceneManager.rec.getX()+5<Pillars.getLastpillar().getX()){
-            TranslateTransition trn=new TranslateTransition(Duration.millis(1000),SceneManager.ap);
+            trn=new TranslateTransition(Duration.millis(1000),SceneManager.ap);
             ob.fallStick(SceneManager.rec);
             Rotate rotate=new Rotate();
             rotate.setAngle(30);                        //special feature, rotates before falling
@@ -85,13 +137,14 @@ public class OurHero {
             trn.setOnFinished(event -> {
                 SceneManager.setContinueflag(false);
                 Buttons.setCanFlip(false);
+                b1.setDisable(false);
             });
         } else if (SceneManager.rec.getHeight()+SceneManager.rec.getX()+5>Pillars.getLastpillar().getX()+Pillars.getLastpillar().getWidth()) {
-            TranslateTransition trn=new TranslateTransition(Duration.millis(500),SceneManager.ap);
+            trn=new TranslateTransition(Duration.millis(500),SceneManager.ap);
             trn.setToX(SceneManager.rec.getHeight()+SceneManager.rec.getX()+5);
             trn.play();
             trn.setOnFinished(event -> {
-                TranslateTransition trn3=new TranslateTransition(Duration.millis(1000),SceneManager.ap);
+                trn3=new TranslateTransition(Duration.millis(1000),SceneManager.ap);
                 Rotate rotate=new Rotate();
                 rotate.setAngle(30);                        //special feature, rotates before falling
                 SceneManager.ap.getTransforms().add(rotate);
@@ -100,27 +153,30 @@ public class OurHero {
                 trn3.setOnFinished(event1 -> {
                     SceneManager.setContinueflag(false);
                     Buttons.setCanFlip(false);
+                    b1.setDisable(false);
                 });
             });
 
         }
         else{
-            TranslateTransition trn=new TranslateTransition(Duration.millis(50),SceneManager.ap);
+            trn=new TranslateTransition(Duration.millis(50),SceneManager.ap);
             trn.setByX(25);
             trn.play();
             trn.setOnFinished(event -> {
-                TranslateTransition trn3=new TranslateTransition(Duration.millis(50),SceneManager.ap);
+                trn3=new TranslateTransition(Duration.millis(50),SceneManager.ap);
                 trn3.setByY(5);
                 trn3.play();
                 trn3.setOnFinished(event1 -> {
-                   TranslateTransition trn4=new TranslateTransition(Duration.millis(500),SceneManager.ap);
+                   trn4=new TranslateTransition(Duration.millis(500),SceneManager.ap);
                    trn4.setToX(Pillars.getLastpillar().getX()+Pillars.getLastpillar().getWidth()-70);
                    trn4.play();
                    trn4.setOnFinished(event2 -> {
+                       b1.setDisable(false);
                        SceneManager.translateAfterLanding();
-                       SceneManager.setTransflag(true);
+                       //SceneManager.setTransflag(true);
                        Buttons.setCanFlip(false);
                        score+=1;
+
                        //SceneManager.returnSticktoDefault();
                        //heromovedflag = true;
 
@@ -130,6 +186,88 @@ public class OurHero {
         }});});
 
     }
+//    static boolean f1,f2,f3,f4,f5;
+//
+//    private static void ini(){
+//        f1=false;
+//        f2=false;
+//        f3=false;
+//        f4=false;
+//        f5=false;
+//
+//    }
+//    public static void stopAnimation(){
+//        ini();
+//        if(trn0!=null){
+//        trn0.statusProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue == TranslateTransition.Status.RUNNING) {
+//                f1=true;
+//                trn0.pause();
+//                System.out.println("trn0");
+//            }
+//        });}
+//        else{
+//            System.out.println("trn0 is null");
+//        }
+//        if(trn!=null){
+//        trn.statusProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue == TranslateTransition.Status.RUNNING) {
+//                f2=true;
+//                trn.pause();System.out.println("trn");
+//            }
+//        });}
+//        else{
+//            System.out.println("trn is null");
+//        }
+//        if(trn2!=null){
+//        trn2.statusProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue == TranslateTransition.Status.RUNNING) {
+//                f3=true;
+//                trn2.pause();System.out.println("trn2");
+//            }
+//        });}
+//        else{
+//            System.out.println("trn2 is null");
+//        }
+//        if(trn3!=null){
+//        trn3.statusProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue == TranslateTransition.Status.RUNNING) {
+//                f4=true;
+//                trn3.pause();System.out.println("trn3");
+//            }
+//        });}
+//        else{
+//            System.out.println("trn3 is null");
+//        }
+//        if(trn4!=null){
+//        trn4.statusProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue == TranslateTransition.Status.RUNNING) {
+//                f5=true;
+//                trn4.pause();System.out.println("trn4");
+//            }
+//        });}
+//        else{
+//            System.out.println("trn4 is null");
+//        }
+//    }
+//
+//    public static void resumeAnimation(){
+//        if(f1){
+//            trn0.play();
+//        }
+//        if (f2){
+//            trn.play();
+//        }
+//        if (f3){
+//            trn2.play();
+//        }
+//        if (f4){
+//            trn3.play();
+//        }
+//        if (f5){
+//            trn4.play();
+//        }
+
 
     public static void flipHero(){
         if(flipped==false) {
