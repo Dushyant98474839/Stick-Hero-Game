@@ -157,6 +157,8 @@ public class SceneManager {
             if(trn2!=null)trn2.pause();
             if(trn3!=null)trn3.pause();
             if(trn4!=null)trn4.pause();
+            if(t!=null)t.pause();
+
             PauseMenu o=new PauseMenu(1);
             o.updateCherryCount();
             mainpage.getChildren().add(PauseMenu.root);
@@ -174,6 +176,7 @@ public class SceneManager {
             if(trn2!=null)trn2.pause();
             if(trn3!=null)trn3.pause();
             if(trn4!=null)trn4.pause();
+            if(t!=null)t.pause();
 
             Sticks.stopStickAnimation();
             if(PauseMenu.root==null) {
@@ -215,6 +218,9 @@ public class SceneManager {
         }
         if(trn4!=null && trn4.getStatus()==Animation.Status.PAUSED){
             trn4.play();
+        }
+        if(t!=null && t.getStatus()==Animation.Status.PAUSED){
+            t.play();
         }
 
         Sticks.resumeStickAnimation();
@@ -320,6 +326,7 @@ public class SceneManager {
     static TranslateTransition trn2;
     static TranslateTransition trn1;
     static TranslateTransition trn;
+    static TranslateTransition t;
 
     public static void translateAfterLanding(){
 
@@ -420,7 +427,6 @@ public class SceneManager {
     public static void checkCollision(AnchorPane ap, Rectangle p){
         if(ap.getBoundsInParent().intersects(p.getBoundsInParent())&& OurHero.isFlipped()){
             //trn3.stop();
-            SceneManager.setContinueflag(false);
             SceneManager.setTransflag(false);
             OurHero.setFlipped(false);
             if (OurHero.getTrn0() != null) OurHero.getTrn0().stop();
@@ -428,9 +434,14 @@ public class SceneManager {
             if (OurHero.getTrn() != null) OurHero.getTrn().stop();
             if (OurHero.getTrn3() != null) OurHero.getTrn3().stop();
             if (OurHero.getTrn4() != null) OurHero.getTrn4().stop();
-            TranslateTransition t=new TranslateTransition(Duration.millis(1000),ap);
+            t=new TranslateTransition(Duration.millis(1000),ap);
             t.setByY(255);
             t.play();
+            t.setOnFinished(actionEvent -> {
+                SceneManager.setContinueflag(false);
+
+
+            });
 
 
         }
