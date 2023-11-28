@@ -45,16 +45,9 @@ public class Cherries {
         while (true) {
             int n=(int)(Math.random()*1000);
             if (n> 75 && n < Pillars.getLastpillar().getX() - 55) {
-                return createImageView("file:///D:\\JAVA PRJ\\StickHero\\src\\main\\resources\\Assets\\cherry.png", n, 750.0, 50.0, 45.0, 0.0, new Glow());
+                return createImageView("cherry.png", n, 550.0, 50.0, 45.0, 0.0, new Glow());
             }
         }
     }
 
-    public static void checkCollision(AnchorPane ap, Rectangle p){
-        if(ap.getBoundsInParent().intersects(p.getBoundsInParent())&& OurHero.isFlipped()){
-            SceneManager.setContinueflag(false);
-            SceneManager.setTransflag(false);
-            OurHero.setFlipped(false);
-        }
     }
-}

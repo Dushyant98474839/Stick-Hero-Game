@@ -1,5 +1,6 @@
 package com.example.stickhero;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.Button;
@@ -22,7 +23,8 @@ public class Sticks {
     public double getAngle() {
         return angle;
     }
-
+    private static Timeline t;
+    private static boolean flag=false;
     public void growStick(Rectangle rect){
         System.out.println("Stickcalss");
         rect.setHeight(rect.getHeight()+5);
@@ -36,7 +38,7 @@ public class Sticks {
         distance = Math.sqrt(Math.pow((heropX - lastpX), 2) + Math.pow((heropY - lastpY), 2));
         angle=90;
 
-        Timeline t= new Timeline(new KeyFrame(Duration.millis(12.5), event -> {
+        t= new Timeline(new KeyFrame(Duration.millis(12.5), event -> {
             Rotate rotate = new Rotate();
             rotate.setPivotX(rect.getX() + 5);
             rotate.setPivotY(rect.getY() + rect.getHeight());
@@ -46,6 +48,18 @@ public class Sticks {
         t.setCycleCount(90);
         t.play();
 
+    }
+    public static void stopStickAnimation(){
+        flag=false;
+        if(t!=null){
+            t.pause();
+            flag=true;
+        }
+    }
+    public static void resumeStickAnimation(){
+        if (Animation.Status.PAUSED==t.getStatus()){
+            t.play();
+        }
     }
 
 }
