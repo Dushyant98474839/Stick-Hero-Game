@@ -1,0 +1,32 @@
+-Add Mines
+    -coordinates just like cherry
+    -boom on collision
+
+
+-Fix Pillars not generating at times
+    -Make pillars translate instead of popping
+
+-Load, save
+
+-Moving background
+
+-Drop Shadow on Buttons
+
+-Difficulty levels
+
+-make pseudo interface
+
+-add pause menu
+    -add help option in pause menu too
+
+-add bandana and move animation
+
+-add sound effects
+
+-Junit
+
+-Exceptions
+
+-Design Patterns
+
+-custom cursor

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="55.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+      <Group layoutX="-25.0" layoutY="-26.0" scaleX="0.5" scaleY="0.5" scaleZ="0.5">
+         <children>
+              <Rectangle arcHeight="17.0" arcWidth="17.0" height="97.0" layoutX="36.000020027160645" stroke="BLACK" strokeType="INSIDE" width="69.0" />
+              <Circle fill="WHITE" layoutX="86.00002002716064" layoutY="31.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
+              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="18.0" layoutX="32.000020027160645" layoutY="10.0" stroke="RED" strokeType="INSIDE" width="76.0" />
+              <Polygon fill="#ff1f1f" layoutX="-16.0" layoutY="-21.0" points="13.999979972839355, 39.99998474121094, 50.0, 40.0, 39.333335876464844, 26.333328247070312" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+              <Polygon fill="#ff1f1f" layoutX="-16.0" layoutY="-21.0" points="28.666648864746094, 52.00001525878906, 50.0, 40.0, 42.666648864746094, 52.00001525878906" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+              <Rectangle fx:id="leftleg" arcHeight="15.0" arcWidth="15.0" height="18.0" layoutX="40.000020027160645" layoutY="91.0" stroke="BLACK" strokeType="INSIDE" width="12.0" />
+              <Rectangle fx:id="rightleg" arcHeight="15.0" arcWidth="15.0" height="18.0" layoutX="88.00002002716064" layoutY="91.0" stroke="BLACK" strokeType="INSIDE" width="12.0" />
+            <Rectangle fx:id="hand" arcHeight="15.0" arcWidth="15.0" height="18.0" layoutX="27.0" layoutY="63.0" rotate="90.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="12.0" />
+         </children>
+      </Group>
+    </children>
+</AnchorPane>
