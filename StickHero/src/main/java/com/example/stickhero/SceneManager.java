@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -35,6 +36,17 @@ public class SceneManager {
         return transflag;
     }
 
+
+    private static Timeline gameLoop;
+
+    public static Timeline getGameLoop() {
+        return gameLoop;
+    }
+
+    public static void setGameLoop() {
+        SceneManager.gameLoop.stop();
+    }
+
     public static void setTransflag(boolean transflag) {
         SceneManager.transflag = transflag;
     }
@@ -51,6 +63,7 @@ public class SceneManager {
     public static AnchorPane ap;
     private static AnchorPane mainpage;
     private static Scene mainscene;
+    private Timeline tanim;
 
     public Scene getMainscene() {
         return mainscene;
@@ -110,6 +123,7 @@ public class SceneManager {
         rectangle.setOpacity(0);
         mainpage.getChildren().add(rectangle);
 
+
         backgroundrandom="background"+String.valueOf(((int)(Math.random()*10))+1)+".jpeg";
         System.out.println(backgroundrandom);
         Image image = new Image(backgroundrandom);
@@ -128,6 +142,7 @@ public class SceneManager {
         if(cherrycount!=null){
             mainpage.getChildren().remove(cherrycount);
         }
+
         addCherryScore();
         addFirstPillar();
         System.out.println("Hero pillar added");
@@ -233,10 +248,10 @@ public class SceneManager {
         mainpage.getChildren().remove(PauseMenu.root);
         pauseflag=false;
     }
-    private Timeline gameLoop;
     private void startGameLoop() {
          gameLoop = new Timeline(new KeyFrame(Duration.millis(1000), event -> {
             if(!continueflag){
+                tanim.stop();
                 gameLoop.stop();
                 System.out.println("done");
                 collisiontimer.stop();
@@ -318,6 +333,7 @@ public class SceneManager {
         //System.out.println(Pillars.getLastpillar().getY());
         ap.setLayoutY(Pillars.getLastpillar().getY()+offsetY);
         mainpage.getChildren().add(ap);
+        bandanaAnimation();
     }
 
     public void generateStick(){
@@ -447,6 +463,7 @@ public class SceneManager {
     };
     public static void checkCollision(AnchorPane ap, Rectangle p){
         if(ap.getBoundsInParent().intersects(p.getBoundsInParent())&& OurHero.isFlipped()){
+            OurHero.stopThread();
             //trn3.stop();
             SceneManager.setTransflag(false);
             OurHero.setFlipped(false);
@@ -466,6 +483,48 @@ public class SceneManager {
 
 
         }
+    }
+    public void bandanaAnimation(){
+        Polygon b1=(Polygon)ap.lookup("#b1");
+        Polygon b2=(Polygon)ap.lookup("#b2");
+        Polygon b3=(Polygon)ap.lookup("#b3");
+        Polygon b4=(Polygon)ap.lookup("#b4");
+
+        tanim=new Timeline(new KeyFrame(Duration.millis(400), actionEvent -> {
+
+
+            //System.out.println("Altering");
+            Timeline temp0=new Timeline(new KeyFrame(Duration.millis(350),actionEventnull->
+            {;}));
+            temp0.setCycleCount(1);
+            temp0.play();
+
+            temp0.setOnFinished(actionEvent0 -> {
+
+                b1.setVisible(false);
+                b2.setVisible(false);
+                b3.setVisible(true);
+                b4.setVisible(true);
+                //hand.setVisible(true);
+
+
+                Timeline temp=new Timeline(new KeyFrame(Duration.millis(250),actionEventnull->
+                {;}));
+                //System.out.println("Restoring");
+                temp.setOnFinished(actionEvent1 -> {
+
+                    b3.setVisible(false);
+                    b4.setVisible(false);
+                    b2.setVisible(true);
+                    b1.setVisible(true);
+                    //hand.setVisible(false);
+                });
+                temp.setCycleCount(1);
+                temp.play();
+            } );
+        }));
+        tanim.setCycleCount(Animation.INDEFINITE);
+        tanim.play();
     }
 
 
@@ -496,7 +555,7 @@ public class SceneManager {
         scorecount.setFill(Color.WHITE);
         mainpage.getChildren().add(scorecount);
         if(ch!=null) {
-            if (ap.getBoundsInParent().intersects(ch.getBoundsInParent())&&counted==false) {
+            if (ap.getBoundsInParent().intersects(ch.getBoundsInParent())&&counted==false&&OurHero.isFlipped()) {
                 counted=true;
                 OurHero.setCherrycount(OurHero.getCherrycount() + 1);
                 mainpage.getChildren().remove(cherrycount);
