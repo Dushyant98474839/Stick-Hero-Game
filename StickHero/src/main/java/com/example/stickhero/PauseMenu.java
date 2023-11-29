@@ -130,7 +130,7 @@ public class PauseMenu {
             RealSceneMangaer rg=new RealSceneMangaer();
             try {
                 SceneManager ob=new SceneManager(1);
-                ob.remInstruction();
+                //ob.remInstruction();
                 ob.remCherrydisplay();
                 rg.switchToMainMenu();
             } catch (IOException e) {
