@@ -1,23 +1,11 @@
--Add Cherries
-    -Restart based on cherry count
-
 -Add Mines
     -coordinates just like cherry
     -boom on collision
 
--Collision Detection
-    -between flipped Hero and lastPillar. There is a bug. if the hero collides with Pillar while being flipped the game
-    terminates, if it restarted then the last pillar still exists and when the hero again dies but this time without
-    colliding while flipped and the game is restarted then everything works fine. Pillars get added twice
-
 -Fix Pillars not generating at times
     -Make pillars translate instead of popping
 
--Fix new window pop up
-
 -Load, save
-
--Moving background
 
 -Drop Shadow on Buttons
 
@@ -25,13 +13,14 @@
 
 -make pseudo interface
 
--add pause menu
-    -add help option in pause menu too
-
--add bandana and move animation
+-add bandana animation
 
 -add sound effects
 
--Junit and Exceptions
+-Junit
+
+-Exceptions
+
+-Design Patterns
 
 -custom cursor

@@ -233,7 +233,7 @@ public class SceneManager {
         mainpage.getChildren().remove(PauseMenu.root);
         pauseflag=false;
     }
-    private Timeline gameLoop;
+    private static Timeline gameLoop;
     private void startGameLoop() {
          gameLoop = new Timeline(new KeyFrame(Duration.millis(1000), event -> {
             if(!continueflag){
@@ -496,7 +496,7 @@ public class SceneManager {
         scorecount.setFill(Color.WHITE);
         mainpage.getChildren().add(scorecount);
         if(ch!=null) {
-            if (ap.getBoundsInParent().intersects(ch.getBoundsInParent())&&counted==false) {
+            if (ap.getBoundsInParent().intersects(ch.getBoundsInParent())&&counted==false&&OurHero.isFlipped()) {
                 counted=true;
                 OurHero.setCherrycount(OurHero.getCherrycount() + 1);
                 mainpage.getChildren().remove(cherrycount);
