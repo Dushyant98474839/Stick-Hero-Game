@@ -22,8 +22,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 //import static com.example.stickhero.OurHero.trn0;
 
 public class SceneManager {
-    private Rectangle rinst;
-    private Text instructions,pressHoldMouse,SpaceFlip;
+    private static Rectangle rinst;
+    private static Text instructions;
+    private static Text pressHoldMouse;
+    private static Text SpaceFlip;
     private static boolean continueflag=true;
     private static boolean counted=false;
     private static boolean transflag=false;
@@ -536,7 +538,7 @@ public class SceneManager {
         mainpage.getChildren().addAll(rinst,instructions,pressHoldMouse,SpaceFlip);
 
     }
-    public void remInstruction(){
+    public static void remInstruction(){
         FadeTransition f1 = new FadeTransition(Duration.seconds(2), rinst);
         FadeTransition f2 = new FadeTransition(Duration.seconds(2), instructions);
         FadeTransition f3 = new FadeTransition(Duration.seconds(2), pressHoldMouse);
