@@ -25,11 +25,21 @@ import static com.example.stickhero.SceneManager.height;
 import static com.example.stickhero.SceneManager.width;
 
 public class Gameover {
-    public Gameover() {
-        gameover();
+    public Gameover(String s) {
+        gameover(s);
+    }
+    private static int c=0;
+    //private static Stage primaryStage;
+    private static Scene scene;
+
+    public static Scene getScene() {
+        return scene;
     }
 
-    private static Stage primaryStage;
+    public static void setScene(Scene scene) {
+        Gameover.scene = scene;
+    }
+
     private static boolean reviveFlag=false;
 
     public static boolean isReviveFlag() {
@@ -40,21 +50,21 @@ public class Gameover {
         Gameover.reviveFlag = reviveFlag;
     }
 
-    public static Stage getPrimaryStage() {
-        return primaryStage;
-    }
-
-    public static void setPrimaryStage(Stage primaryStage) {
-        Gameover.primaryStage = primaryStage;
-    }
-
-    public void gameover() {
-        primaryStage=new Stage();
+//    public static Stage getPrimaryStage() {
+//        return primaryStage;
+//    }
+//
+//    public static void setPrimaryStage(Stage primaryStage) {
+//        Gameover.primaryStage = primaryStage;
+//    }
+    private static ImageView deadImageView,restartImageView,reviveImageView,homeImageView,cherryImageView;
+    public void gameover(String s) {
+//        primaryStage=new Stage();
+//        primaryStage.setResizable(false);
         AnchorPane root = new AnchorPane();
-        Scene scene = new Scene(root, 600, 1000);
 
         // Background Image
-        Image image = new Image("file:///D:\\JAVA PRJ\\StickHero\\src\\main\\resources\\Assets\\background.png");
+        Image image = new Image(s);
         // new BackgroundSize(width, height, widthAsPercentage, heightAsPercentage, contain, cover)
         BackgroundSize backgroundSize = new BackgroundSize(width, height, false, false, true, true);
         // new BackgroundImage(image, repeatX, repeatY, position, size)
@@ -62,22 +72,29 @@ public class Gameover {
         // new Background(images...)
         Background background = new Background(backgroundImage);
         root.setBackground(background);
+        if(c!=0){
+            root.getChildren().removeAll(deadImageView,restartImageView,reviveImageView,homeImageView,cherryImageView);
+        }
 
         // Other Images with Glow or DropShadow effects
-        ImageView deadImageView = createImageView("file:///D:\\JAVA PRJ\\StickHero\\src\\main\\resources\\Assets\\dead.png", 245.0, 702.0, 100.0, 106.0, 45.0, new Glow());
+        deadImageView = createImageView("dead.png", 245.0, 492.0, 100.0, 106.0, 45.0, new Glow());
 
-        ImageView restartImageView = createImageView("file:///D:\\JAVA PRJ\\StickHero\\src\\main\\resources\\Assets\\restart.png", 73.0, 501.0, 90.0, 90.0, 0.0, new DropShadow());
+        restartImageView = createImageView("restart.png", 73.0, 331.0, 90.0, 90.0, 0.0, new DropShadow());
 
-        ImageView reviveImageView = createImageView("file:///D:\\JAVA PRJ\\StickHero\\src\\main\\resources\\Assets\\revive.png", 220.0, 462.0, 151.0, 154.0, -10.0, new DropShadow());
+        reviveImageView = createImageView("revive.png", 240.0, 312.0, 121.0, 124.0, -10.0, new DropShadow());
 
-        ImageView homeImageView = createImageView("file:///D:\\JAVA PRJ\\StickHero\\src\\main\\resources\\Assets\\home.png", 428.0, 500.0, 80.0, 80.0, 0.0, new DropShadow());
+        homeImageView = createImageView("home.png", 438.0, 330.0, 80.0, 80.0, 0.0, new DropShadow());
 
-        ImageView cherryImageView = createImageView("file:///D:\\JAVA PRJ\\StickHero\\src\\main\\resources\\Assets\\cherry.png", 10.0, 10.0, 60.0, 55.0, 0.0, new Glow());
-        Rectangle restartrect=new Rectangle(73,501,90,90);
+        cherryImageView = createImageView("cherry.png", 10.0, 10.0, 60.0, 55.0, 0.0, new Glow());
+
+
+
+        Rectangle restartrect=new Rectangle(73,331,90,90);
+        restartrect.setFill(Color.BLACK);
         restartrect.setOpacity(0);
-        Rectangle mainrect=new Rectangle(428,500,80,80);
+        Rectangle mainrect=new Rectangle(428,330,80,80);
         mainrect.setOpacity(0);
-        Rectangle reviverect=new Rectangle(220,462,151,154);
+        Rectangle reviverect=new Rectangle(220,292,151,154);
         reviverect.setOpacity(0);
 
         Text cherrycount = createText(": "+OurHero.getCherrycount(), 60.0, 50.0, 30.0, new Glow(0));
@@ -100,7 +117,7 @@ public class Gameover {
                 SceneManager.setToDefault();
                 //SceneManager.setTransflag(false);
                 rg.switchToGame();
-                primaryStage.close();
+                //primaryStage.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -111,7 +128,7 @@ public class Gameover {
                 SceneManager.setToDefault();
                 //SceneManager.setTransflag(false);
                 rg.switchToMainMenu();
-                primaryStage.close();
+                //primaryStage.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -180,7 +197,7 @@ public class Gameover {
                         //SceneManager sn=new SceneManager();
                         reviveFlag=true;
                         rg.switchToGame();
-                        primaryStage.close();
+                        //primaryStage.close();
 
 
                     } catch (IOException e) {
@@ -277,7 +294,7 @@ public class Gameover {
                                         "-fx-background-radius: 5px; " +    // Rounded corners
                                         "-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.3) , 5, 0.0 , 0 , 1 );" // Drop shadow
                         );
-                        ImageView qr = createImageView("file:///D:\\JAVA PRJ\\StickHero\\src\\main\\resources\\Assets\\qr.jpg", 135.0, 375.0, 330.0, 325.0, 0.0, new Glow());
+                        ImageView qr = createImageView("qr.jpg", 135.0, 375.0, 330.0, 325.0, 0.0, new Glow());
                         root.getChildren().addAll(r3,t3,qr,cancel2);
                         cancel2.setOnMouseClicked(mo2->{
                             root.getChildren().removeAll(qr,t3,r3,cancel2);
@@ -301,9 +318,9 @@ public class Gameover {
         translateTransition2.setAutoReverse(false);
         translateTransition2.setCycleCount(TranslateTransition.INDEFINITE);
         translateTransition2.play();
-        Text bestScoreText = createText("Best Score", 220.0, 106.0, 35.0, new Glow());
+        Text bestScoreText = createText("Best Score", 220.0, 56.0, 35.0, new Glow());
 
-        Text yourScoreText = createText("Your Score", 220.0, 271.0, 35.0, new Glow());
+        Text yourScoreText = createText("Your Score", 220.0, 191.0, 35.0, new Glow());
         bestScoreText.setFill(Color.WHITE);
         yourScoreText.setFill(Color.WHITE);
 
@@ -313,29 +330,36 @@ public class Gameover {
         r.setArcWidth(20);
         r.setOpacity(0.35);
         r.setFill(Color.BLACK);
-        r.setHeight(68);
+        r.setHeight(106);
         r.setWidth(191);
         r.setLayoutX(205);
-        r.setLayoutY(124);
+        r.setLayoutY(18);
         Rectangle yr=new Rectangle();
         yr.setArcHeight(20);
         yr.setArcWidth(20);
         yr.setOpacity(0.35);
         yr.setFill(Color.BLACK);
-        yr.setHeight(68);
+        yr.setHeight(108);
         yr.setWidth(191);
         yr.setLayoutX(205);
-        yr.setLayoutY(294);Text yourScore=createText(Integer.toString(OurHero.getScore()),290,340,40,new Glow());
+        yr.setLayoutY(153);
+        Text yourScore=createText(Integer.toString(OurHero.getScore()),290,247.5,40,new Glow());
         yourScore.setFill(Color.WHITE);
 
-        root.getChildren().addAll(
+        root.getChildren().addAll(r,yr,
                 deadImageView, restartImageView, reviveImageView, homeImageView,
-                bestScoreText, yourScoreText, r, yr, cherryImageView, cherrycount,yourScore,restartrect,reviverect,mainrect
+                bestScoreText, yourScoreText,  yourScore,restartrect,reviverect,mainrect
         );
+        Rectangle rec=new Rectangle(10,17.5,100,45);
+        rec.setOpacity(0.35);
+        rec.setArcWidth(20);
+        rec.setArcHeight(20);
+        scene = new Scene(root, 600, 800);
 
+        root.getChildren().addAll(rec,cherryImageView, cherrycount);
 
-        primaryStage.setScene(scene);
-        primaryStage.show();
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
     }
 
     private ImageView createImageView(String imageUrl, double layoutX, double layoutY, double fitWidth, double fitHeight, double rotate, javafx.scene.effect.Effect effect) {

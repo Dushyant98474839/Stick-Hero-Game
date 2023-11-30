@@ -43,9 +43,10 @@ public class Pillars {
         Rectangle rect=new Rectangle();
         rect.setHeight(250);
         rect.setWidth(randomWidth());
-        rect.setY(SceneManager.height-rect.getHeight());
+        //rect.setY(SceneManager.height-rect.getHeight());
         int x= (int) (randomX(rect.getWidth()));
         rect.setX(x);
+        rect.setY(1000);
         rect.setFill(Color.BLACK);
         lastpillar=rect;
         System.out.println("Pillar Generated");

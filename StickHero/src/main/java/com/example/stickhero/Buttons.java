@@ -2,6 +2,7 @@ package com.example.stickhero;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -57,6 +58,7 @@ public class Buttons extends Button {
         setMaxHeight(1000);
         setMinWidth(600);
         setMaxWidth(600);
+        setLayoutY(100);
         setupTimeline();
         initialiseButtonListeners();
     }
@@ -70,8 +72,12 @@ public class Buttons extends Button {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if ((mouseEvent.getButton().equals(MouseButton.PRIMARY) && flag == false)) {
-                        timeline.play();
-                        flag2=false;
+                    new Thread(() -> {
+                        Platform.runLater(() -> {
+                            timeline.play();
+                            flag2 = false;
+                        });
+                    }).start();
                     }
 
                 }
@@ -99,15 +105,17 @@ public class Buttons extends Button {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
+
+//                    new Thread(() -> {
+//                        Platform.runLater(() -> {
+                            st.fallStick(SceneManager.rec);
+//                        });
+//                    }).start();
+
                     //System.out.println(SceneManager.rec.getX());
-                    st.fallStick(SceneManager.rec);
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    canFlip=true;
-                    OurHero.moveHero();
+
+
+
                 }
             }
         });
