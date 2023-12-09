@@ -10,6 +10,9 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,5 +58,12 @@ public class HelloApplication extends Application {
 
     public static void main(String[] args) {
         launch();
+        Result result = JUnitCore.runClasses(Sticks.class);
+        for(Failure failure : result.getFailures())
+        {
+            System.out.println(failure.toString());
+
+        }
+        System.out.println(result.wasSuccessful());
     }
 }

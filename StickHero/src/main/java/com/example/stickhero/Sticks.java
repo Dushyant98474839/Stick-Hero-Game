@@ -7,6 +7,10 @@ import javafx.scene.control.Button;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
 
 public class Sticks {
     public Sticks() {
@@ -77,17 +81,50 @@ public class Sticks {
     }
     public static void stopStickAnimation(){
         flag=false;
+        check_flag_false(flag);
+
         if(t!=null){
             t.pause();
             flag=true;
+            check_flag_true(flag);
+
         }
+    }
+    @Test
+    public static void check_flag_false(boolean flag)
+    {
+        assertFalse(flag);
+    }
+
+    @Test
+    public static void check_flag_true(boolean flag)
+    {
+        assertTrue(flag);
     }
     public static void resumeStickAnimation(){
-        if(t!=null){
-        if (Animation.Status.PAUSED==t.getStatus()){
-            t.play();
+        if(t!=null)
+        {
+            check_not_null(t);
+            if (Animation.Status.PAUSED==t.getStatus()){
+                t.play();
+            }
         }
+        else {
+            check_null(t);
         }
+
     }
+    @Test
+    public static void check_not_null(Timeline t)
+    {
+        assertNotNull(t);
+    }
+
+    @Test
+    public static void check_null(Timeline t)
+    {
+        assertNull(t);
+    }
+
 
 }

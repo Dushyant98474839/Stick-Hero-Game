@@ -32,6 +32,7 @@ public class SceneManager {
     private static Text SpaceFlip;
     private static boolean continueflag=true;
     private static boolean counted=false;
+    private static boolean collision=false;
     private static boolean transflag=false;
     private static boolean pauseflag=false;
 
@@ -180,7 +181,7 @@ public class SceneManager {
         thrdBandana.start();//Bandana Animation Thread Started
 
         cherries=new Cherries();
-        if(Math.random()>0.3) {
+        if(Math.random()>0.5) {
             System.out.println("Adding cherry");
             addCherry();
         }
@@ -324,6 +325,7 @@ public class SceneManager {
                 }
                 System.out.println("ff");
                 counted=false;
+                collision=false;
                 addPillars();
                 System.out.println("Subsequent pillar added");
 
@@ -602,24 +604,47 @@ public class SceneManager {
     };
     public void checkCollisionMines(AnchorPane ap,ImageView ch){
         if(chmines!=null) {
-            if (ap.getBoundsInParent().intersects(ch.getBoundsInParent())) {
+            if (ap.getBoundsInParent().intersects(ch.getBoundsInParent())&&collision==false) {
+                collision=true;
                 System.out.println("Bomb Collision detected");
                 OurHero.stopThread();
                 //trn3.stop();
                 SceneManager.setTransflag(false);
-                OurHero.setFlipped(false);
+
                 if (OurHero.getTrn0() != null) OurHero.getTrn0().stop();
                 if (OurHero.getTrn2() != null) OurHero.getTrn2().stop();
                 if (OurHero.getTrn() != null) OurHero.getTrn().stop();
                 if (OurHero.getTrn3() != null) OurHero.getTrn3().stop();
                 if (OurHero.getTrn4() != null) OurHero.getTrn4().stop();
+
+                RotateTransition rt=new RotateTransition(Duration.millis(100),ap);
+                TranslateTransition t=new TranslateTransition(Duration.millis(500),ap);
+                if(OurHero.isFlipped()) {
+                    t.setByY(50);
+                }
+                else {
+                    t.setByY(-50);
+                }
+                OurHero.setFlipped(false);
+                rt.setByAngle(180);
+                rt.setCycleCount(5);
+                rt.play();
+                t.play();
+                mainpage.getChildren().remove(ch);
                 SoundDesign soundObjj=new SoundDesign(11);
                 new Thread(soundObjj).start();
+                SoundDesign soundObjij=new SoundDesign(5);
+                new Thread(soundObjij).start();
+                rt.setOnFinished(actionEvent -> {
+
+
+
                 mainpage.getChildren().remove(ap);
 
-                mainpage.getChildren().remove(ch);
+
                 ch.setY(120000);
                 SceneManager.setContinueflag(false);
+                });
             }
         }
     }
