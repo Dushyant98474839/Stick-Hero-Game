@@ -7,16 +7,17 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 
 import java.io.IOException;
+import java.util.Random;
 
-public class Cherries {
+public class Cherries implements MinesAndCherries {
     private int xcoord;
     private int ycoord;
     private int updown;
 
     public Cherries() {
-        makecherries();
+        make();
     }
-
+    Random random=new Random();
     public int getXcoord() {
         return xcoord;
     }
@@ -28,10 +29,13 @@ public class Cherries {
     public int getUpdown() {
         return updown;
     }
+    private static ImageView imageView=null;
+    private static Image cherryimage=new Image("cherry.png");
+    public ImageView createImageView(double layoutX, double layoutY, double fitWidth, double fitHeight, double rotate, javafx.scene.effect.Effect effect) {
 
 
-    public ImageView createImageView(String imageUrl, double layoutX, double layoutY, double fitWidth, double fitHeight, double rotate, javafx.scene.effect.Effect effect) {
-        ImageView imageView = new ImageView(new Image(imageUrl));
+        imageView = new ImageView(cherryimage);
+
         imageView.setLayoutX(layoutX);
         imageView.setLayoutY(layoutY);
         imageView.setFitWidth(fitWidth);
@@ -40,21 +44,19 @@ public class Cherries {
         imageView.setEffect(effect);
         return imageView;
     }
-    public ImageView makecherries() {
+    public ImageView make() {
         //Pillars.getLastpillar().getX()-55,75
-        while (true) {
-            int n=(int)(Math.random()*1000);
-            if (n> 75 && n < Pillars.getLastpillar().getX() - 55) {
-                return createImageView("file:///D:\\JAVA PRJ\\StickHero\\src\\main\\resources\\Assets\\cherry.png", n, 750.0, 50.0, 45.0, 0.0, new Glow());
-            }
+        System.out.println("Cherry function invoked");
+
+        System.out.println("cherry");
+        if ((int) Pillars.getLastpillar().getX() - 55 - 75 > 0) {
+            int n = random.nextInt(((int) Pillars.getLastpillar().getX() - 55 - 75) + 1) + 75;
+            System.out.println("Cherry X coordinate: " + n);
+            return createImageView(n, 550.0, 50.0, 45.0, 0.0, new Glow());
         }
+
+        System.out.println("No cherry created");
+        return null;
     }
 
-    public static void checkCollision(AnchorPane ap, Rectangle p){
-        if(ap.getBoundsInParent().intersects(p.getBoundsInParent())&& OurHero.isFlipped()){
-            SceneManager.setContinueflag(false);
-            SceneManager.setTransflag(false);
-            OurHero.setFlipped(false);
-        }
     }
-}

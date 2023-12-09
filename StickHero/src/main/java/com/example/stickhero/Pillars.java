@@ -5,11 +5,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Translate;
 
+import java.util.Random;
+
 public class Pillars {
     public Pillars() {
     }
     private static Rectangle lastpillar;
     private static Rectangle heropillar;
+    Random random=new Random();
     public static Rectangle getLastpillar() {
         return lastpillar;
     }
@@ -43,9 +46,10 @@ public class Pillars {
         Rectangle rect=new Rectangle();
         rect.setHeight(250);
         rect.setWidth(randomWidth());
-        rect.setY(SceneManager.height-rect.getHeight());
+        //rect.setY(SceneManager.height-rect.getHeight());
         int x= (int) (randomX(rect.getWidth()));
         rect.setX(x);
+        rect.setY(1000);
         rect.setFill(Color.BLACK);
         lastpillar=rect;
         System.out.println("Pillar Generated");
@@ -64,20 +68,18 @@ public class Pillars {
 //    }
     public int randomWidth(){
         System.out.println("Pillarwidthlopp");
-        int width=(int)(Math.random()*1000);
-        while(!(width>=25 && width<=350)){
-            width=(int)(Math.random()*1000);
-        }
+        int width=random.nextInt((350-25)+1)+25;
         return width;
     }
     public int randomX(double width){
 
         int X = (int) (Math.random() * 1000);
-        while(!(X >= 75+50 && X <= 600-width-5)) {
-            System.out.println("RandomX "+lastpillar.getWidth()+25+" "+width);
-            System.out.println("75,"+X);
-            X = (int) (Math.random() * 1000);
-        }
+        X=random.nextInt((600-(int)width-5-125)+1)+125;
+//        while(!(X >= 75+50 && X <= 600-width-5)) {
+//            System.out.println("RandomX "+lastpillar.getWidth()+25+" "+width);
+//            System.out.println("75,"+X);
+//            X = (int) (Math.random() * 1000);
+//        }
         System.out.println("PillarXLoop");
         return X;
     }

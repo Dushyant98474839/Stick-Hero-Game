@@ -9,13 +9,17 @@ import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,6 +38,19 @@ public class SceneManager {
     public static boolean isTransflag() {
         return transflag;
     }
+    private Cherries cherries;
+    private Mines mines;
+    private static Rectangle redarea;
+    private static Timeline gameLoop;
+
+    public static Timeline getGameLoop() {
+        return gameLoop;
+    }
+
+    public static void setGameLoop() {
+        if(gameLoop!=null)
+        SceneManager.gameLoop.stop();
+    }
 
     public static void setTransflag(boolean transflag) {
         SceneManager.transflag = transflag;
@@ -47,10 +64,12 @@ public class SceneManager {
         SceneManager.continueflag = continueflag;
     }
     static ImageView ch=null;
+    static ImageView chmines=null;
 
     public static AnchorPane ap;
     private static AnchorPane mainpage;
     private static Scene mainscene;
+
 
     public Scene getMainscene() {
         return mainscene;
@@ -79,27 +98,36 @@ public class SceneManager {
     public static final int offsetY=-53;
     private Rectangle rectangle=new Rectangle(20,20,30,30);
     static Text cherrycount=null;
-    Text scorecount;
+    private static Text scorecount;
+    private static boolean reminstFlag;
     private ImageView pause;
     static BackgroundImage backgroundImage;
-    //public static volatile boolean ismoving=false;
-    public SceneManager(int i){}
     static Rectangle rec=new Rectangle(70,550,5,0);
-    String backgroundrandom;
+    private static String backgroundrandom;
+
+    public static String getBackgroundrandom() {
+        return backgroundrandom;
+    }
+    private BandanaAnimation bandanaobj;
+    private Thread thrdBandana;
+    private OurHero obh;
+
+    public SceneManager(int i){}
+
     public SceneManager() throws IOException{
+        obh=OurHero.getInstance();
         rec=new Rectangle(70,550,5,0);
         //ismoving=false;
         counted=false;
         transflag=false;
+        chmines=null;
+        //playMusic();
         mainpage=new AnchorPane();
+        if(Menu.inceptionFlag) {
+            mainpage.setScaleY(-1);
+        }
         mainscene=new Scene(mainpage,width,height);
         pauseflag=false;
-//        mainstage=new Stage();
-        //mainstage.setScene(mainscene);
-//        mainstage.setResizable(false);
-//        mainstage.setTitle("Stick Hero");
-//        Image icon=new Image("file:///D:\\JAVA PRJ\\StickHero\\src\\main\\resources\\Assets\\Logo.png");
-//        mainstage.getIcons().add(icon);
         pause=createImageView("pause.png",20,20,30,35,0,new DropShadow());
         mainpage.getChildren().add(pause);
         switchtoPause();
@@ -110,7 +138,12 @@ public class SceneManager {
         rectangle.setOpacity(0);
         mainpage.getChildren().add(rectangle);
 
+
+
         backgroundrandom="background"+String.valueOf(((int)(Math.random()*10))+1)+".jpeg";
+        if(Menu.inceptionFlag){
+            backgroundrandom="inception.jpg";
+        }
         System.out.println(backgroundrandom);
         Image image = new Image(backgroundrandom);
         // new BackgroundSize(width, height, widthAsPercentage, heightAsPercentage, contain, cover)
@@ -122,12 +155,17 @@ public class SceneManager {
         mainpage.setBackground(background);
         collisiontimer.start();
         collisiontimerCherry.start();
+        collisiontimerMines.start();
 
-        addInstruction();
+        if(Menu.inceptionFlag==false) {
+            addInstruction();
+        }
+        reminstFlag=false;
         addScoreDisplay();
         if(cherrycount!=null){
             mainpage.getChildren().remove(cherrycount);
         }
+
         addCherryScore();
         addFirstPillar();
         System.out.println("Hero pillar added");
@@ -135,10 +173,19 @@ public class SceneManager {
         addHero();
         addPillars();
         System.out.println("First pillar added");
-        if(Math.random()>0.5) {
+
+
+        bandanaobj=BandanaAnimation.getInstance();//SingleTon Design Pattern Implementation
+        thrdBandana=new Thread(bandanaobj);//Bandana Animation Thread Created
+        thrdBandana.start();//Bandana Animation Thread Started
+
+        cherries=new Cherries();
+        if(Math.random()>0.3) {
             System.out.println("Adding cherry");
             addCherry();
         }
+        mines=new Mines();
+
         System.out.println("* "+transflag);
         generateStick();
         System.out.println("@"+transflag);
@@ -146,11 +193,14 @@ public class SceneManager {
         System.out.println("#"+transflag);
 
     }
+
     public void switchtoPause(){
         if(PauseMenu.root==null) {
             PauseMenu mn = new PauseMenu();
         }
         pause.setOnMouseClicked(mouseEvent -> {
+            SoundDesign obButton=new SoundDesign(8);
+            new Thread(obButton).start();
             pauseflag=true;
             Sticks.stopStickAnimation();
             if (OurHero.getTrn0() != null) OurHero.getTrn0().pause();
@@ -159,10 +209,12 @@ public class SceneManager {
             if (OurHero.getTrn3() != null) OurHero.getTrn3().pause();
             if (OurHero.getTrn4() != null) OurHero.getTrn4().pause();
             if(trn!=null)trn.pause();
+            if(trn0!=null)trn0.pause();
             if(trn1!=null)trn1.pause();
             if(trn2!=null)trn2.pause();
             if(trn3!=null)trn3.pause();
             if(trn4!=null)trn4.pause();
+            if(trn5!=null)trn5.pause();
             if(t!=null)t.pause();
 
             PauseMenu o=new PauseMenu(backgroundrandom);
@@ -171,6 +223,8 @@ public class SceneManager {
             PauseMenu.root.toFront();
         });
         rectangle.setOnMousePressed(mouseEvent -> {
+            SoundDesign obButton=new SoundDesign(8);
+            new Thread(obButton).start();
             pauseflag=true;
             if (OurHero.getTrn0() != null) OurHero.getTrn0().pause();
             if (OurHero.getTrn2() != null) OurHero.getTrn2().pause();
@@ -178,10 +232,12 @@ public class SceneManager {
             if (OurHero.getTrn3() != null) OurHero.getTrn3().pause();
             if (OurHero.getTrn4() != null) OurHero.getTrn4().pause();
             if(trn!=null)trn.pause();
+            if(trn0!=null)trn0.pause();
             if(trn1!=null)trn1.pause();
             if(trn2!=null)trn2.pause();
             if(trn3!=null)trn3.pause();
             if(trn4!=null)trn4.pause();
+            if(trn5!=null)trn5.pause();
             if(t!=null)t.pause();
 
             Sticks.stopStickAnimation();
@@ -210,6 +266,9 @@ public class SceneManager {
         if (OurHero.getTrn4() != null && OurHero.getTrn4().getStatus() == Animation.Status.PAUSED) {
             OurHero.getTrn4().play();
         }
+        if(trn0!=null && trn0.getStatus()==Animation.Status.PAUSED){
+            trn0.play();
+        }
         if(trn!=null && trn.getStatus()==Animation.Status.PAUSED){
             trn.play();
         }
@@ -233,18 +292,20 @@ public class SceneManager {
         mainpage.getChildren().remove(PauseMenu.root);
         pauseflag=false;
     }
-    private Timeline gameLoop;
     private void startGameLoop() {
          gameLoop = new Timeline(new KeyFrame(Duration.millis(1000), event -> {
             if(!continueflag){
                 gameLoop.stop();
+
+                thrdBandana.interrupt();//Bandana Animation Thread Stopped
+
                 System.out.println("done");
                 collisiontimer.stop();
                 collisiontimerCherry.stop();
+                collisiontimerMines.stop();
                 RealSceneMangaer rg=new RealSceneMangaer();
                 try {
-                    rg.switchToGameover(backgroundrandom);
-                    //mainstage.close();
+                    rg.changeScene(3);//IMPLEMENTED USING FACADE Design Pattern
 
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -253,18 +314,35 @@ public class SceneManager {
             System.out.println(transflag);
             if(transflag&&!pauseflag){
                 System.out.println("- "+transflag);
-                new Thread(() -> {
-                    Platform.runLater(() -> {
-                        remInstruction();
-                    });
-                }).start();
+                if(reminstFlag==false) {
+                    new Thread(() -> {
+                        Platform.runLater(() -> {
+                            remInstruction();
+                        });
+                    }).start();
+                    reminstFlag=true;
+                }
                 System.out.println("ff");
                 counted=false;
                 addPillars();
                 System.out.println("Subsequent pillar added");
-                if(Math.random()>0.5) {
-                    addCherry();
-                }
+
+
+                        if(Math.random()>0.25) {
+                            addCherry();
+                        }
+
+
+                new Thread(() -> {
+                    Platform.runLater(() -> {
+                        if(((int)Pillars.getLastpillar().getX()-75)>175) {
+                            addMines();
+                        } else if(Math.random()>0.5){
+                            addMines();
+                        }
+                    });
+                }).start();
+
                 transflag=(false);
                 //returnSticktoDefault();
                 //System.out.println(rec.getHeight()+" "+rec.getX()+" "+rec.getY());
@@ -289,6 +367,29 @@ public class SceneManager {
         Rectangle pillar=pillars.makePillars();
         System.out.println("Pillar returned");
         mainpage.getChildren().add(pillar);
+        if(redarea!=null){
+            mainpage.getChildren().remove(redarea);
+        }
+        redarea=new Rectangle();
+        redarea.setX(pillar.getX()+pillar.getWidth()/2-10);
+        redarea.setY(pillar.getY());
+        redarea.setFill(Color.RED);
+        redarea.setWidth(20);
+        redarea.setHeight(5);
+        mainpage.getChildren().add(redarea);
+        TranslateTransition tpillar=new TranslateTransition(Duration.millis(500),pillar);
+        tpillar.setByY(-450);
+        TranslateTransition tpillarred=new TranslateTransition(Duration.millis(500),redarea);
+        tpillarred.setByY(-450);
+        new Thread(() -> {
+            Platform.runLater(() -> {
+                tpillar.play();
+                tpillarred.play();
+            });
+        }).start();
+
+
+        tpillar.setOnFinished(actionEvent -> {
         System.out.println("Pillar Added");
         Buttons.setFlag(false);
         Text warning=createText("Don't click on pillars",pillar.getX()+10,pillar.getY()+100,15,new Glow());
@@ -301,6 +402,7 @@ public class SceneManager {
         pillar.setOnMouseReleased(mouseEvent -> {
             mainpage.getChildren().remove(warning);
         });
+        });
     }
 //    Button buttonip=new Button();
 //    public void createInputBtnToGrowStick(){
@@ -312,12 +414,18 @@ public class SceneManager {
 //        mainpage.getChildren().remove(buttonip);
 //    }
     public void addHero() throws IOException {
-        OurHero obj=new OurHero();
+        OurHero obj=OurHero.getInstance();
         ap=obj.createHero();
         ap.setLayoutX(0);
         //System.out.println(Pillars.getLastpillar().getY());
         ap.setLayoutY(Pillars.getLastpillar().getY()+offsetY);
         mainpage.getChildren().add(ap);
+//        new Thread(() -> {
+//            Platform.runLater(() -> {
+//                bandanaAnimation();
+//            });
+//        }).start();
+
     }
 
     public void generateStick(){
@@ -328,17 +436,36 @@ public class SceneManager {
     }
     public static void returnSticktoDefault(){
         mainpage.getChildren().remove(rec);
-        rec=new Rectangle(70,Pillars.getLastpillar().getY(),5,0);
+        rec=new Rectangle(70,550,5,0);
         mainpage.getChildren().add(rec);
 
     }
-    static TranslateTransition trn3;
-    static TranslateTransition trn4;
-    static TranslateTransition trn2;
-    static TranslateTransition trn1;
-    static TranslateTransition trn;
-    static TranslateTransition t;
+    private static TranslateTransition trn3;
+    private static TranslateTransition trn5;
+    private static TranslateTransition trn4;
+    private static TranslateTransition trn2;
+   private static TranslateTransition trn1;
+   private static TranslateTransition trn;
+   private static TranslateTransition trn0;
 
+
+    public OurHero getObh() {
+        return obh;
+    }
+
+    public void setObh(OurHero obh) {
+        this.obh = obh;
+    }
+
+    static TranslateTransition t;
+    public void playMusic(){
+        String audioFile = "src\\main\\resources\\music.mp3";
+        Media media = new Media(new File(audioFile).toURI().toString());
+
+        // Create a media player
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
+    }
     public static void translateAfterLanding(){
 
 //        Button b1 = (Button) PauseMenu.root.lookup("#mainmenu");
@@ -353,6 +480,8 @@ public class SceneManager {
 //        trn0.setByX(distance);
         trn=new TranslateTransition(Duration.millis(1000),rec);
         trn.setByX(distance);
+        trn0=new TranslateTransition(Duration.millis(1000),redarea);
+        trn0.setByX(distance);
         trn1=new TranslateTransition(Duration.millis(1000),Pillars.getLastpillar());
         trn1.setByX(distance);
         System.out.println(Pillars.getLastpillar().getX());
@@ -365,13 +494,18 @@ public class SceneManager {
         trn3.setByX(distance);
         trn4=new TranslateTransition(Duration.millis(1000),ch);
         trn4.setByX(distance);
+        System.out.println("Cherry translated");
+        trn5=new TranslateTransition(Duration.millis(1000),chmines);
+        trn5.setByX(distance);
 //        trn0.play();
 //        TranslateTransition trn5 = new TranslateTransition(Duration.millis(1000),backgroundImage);
 //        trn5.setByX(distance);
         trn.play();
+        trn0.play();
         trn1.play();
         trn2.play();
         trn3.play();
+        trn5.play();
 
         trn4.play();
         trn3.setOnFinished(event -> {
@@ -386,13 +520,14 @@ public class SceneManager {
             System.out.println("Enabled");
         });
     }
-
+    ImageView cherryImageView;
     public void addCherryScore(){
         if(cherrycount!=null) {
-            mainpage.getChildren().remove(cherrycount);
+            mainpage.getChildren().removeAll(cherrycount,cherryImageView);
+
         }
-        ImageView cherryImageView = createImageView("cherry.png", 495.0, 10.0, 60.0, 55.0, 0.0, new Glow());
-        cherrycount = createText(": "+(OurHero.getCherrycount()), 550.0, 50.0, 30.0,new Glow(0));
+        cherryImageView = createImageView("cherry.png", 495.0, 10.0, 60.0, 55.0, 0.0, new Glow());
+        cherrycount = createText(": "+(obh.getCherrycount()), 550.0, 50.0, 30.0,new Glow(0));
         cherrycount.setFill(Color.WHITE);
         Rectangle rec=new Rectangle(495,17.5,100,45);
         rec.setOpacity(0.35);
@@ -431,13 +566,27 @@ public class SceneManager {
         if(ch!=null){
             mainpage.getChildren().remove(ch);
         }
-        Cherries cherries=new Cherries();
+
         System.out.println("Cherry function invoking");
-        ch=cherries.makecherries();
+        ch=cherries.make();
         if(ch!=null) {
+
             mainpage.getChildren().add(ch);
+            ch.toFront();
         }
         System.out.println("cherry added successfully");
+    }
+    public void addMines(){
+        if(chmines!=null){
+            mainpage.getChildren().remove(chmines);
+        }
+
+        System.out.println("Mines function invoking");
+        chmines=mines.make();
+        if(chmines!=null) {
+            mainpage.getChildren().add(chmines);
+        }
+        System.out.println("Mines added successfully");
     }
     AnimationTimer collisiontimer=new AnimationTimer() {
         @Override
@@ -445,8 +594,39 @@ public class SceneManager {
             checkCollision(ap,Pillars.getLastpillar());
         }
     };
+    AnimationTimer collisiontimerMines=new AnimationTimer() {
+        @Override
+        public void handle(long l) {
+            checkCollisionMines(ap,chmines);
+        }
+    };
+    public void checkCollisionMines(AnchorPane ap,ImageView ch){
+        if(chmines!=null) {
+            if (ap.getBoundsInParent().intersects(ch.getBoundsInParent())) {
+                System.out.println("Bomb Collision detected");
+                OurHero.stopThread();
+                //trn3.stop();
+                SceneManager.setTransflag(false);
+                OurHero.setFlipped(false);
+                if (OurHero.getTrn0() != null) OurHero.getTrn0().stop();
+                if (OurHero.getTrn2() != null) OurHero.getTrn2().stop();
+                if (OurHero.getTrn() != null) OurHero.getTrn().stop();
+                if (OurHero.getTrn3() != null) OurHero.getTrn3().stop();
+                if (OurHero.getTrn4() != null) OurHero.getTrn4().stop();
+                SoundDesign soundObjj=new SoundDesign(11);
+                new Thread(soundObjj).start();
+                mainpage.getChildren().remove(ap);
+
+                mainpage.getChildren().remove(ch);
+                ch.setY(120000);
+                SceneManager.setContinueflag(false);
+            }
+        }
+    }
     public static void checkCollision(AnchorPane ap, Rectangle p){
         if(ap.getBoundsInParent().intersects(p.getBoundsInParent())&& OurHero.isFlipped()){
+            System.out.println("Collision detected");
+            OurHero.stopThread();
             //trn3.stop();
             SceneManager.setTransflag(false);
             OurHero.setFlipped(false);
@@ -458,9 +638,13 @@ public class SceneManager {
             t=new TranslateTransition(Duration.millis(1000),ap);
             t.setByY(255);
             t.play();
+            SoundDesign soundobj=new SoundDesign(5);
+            Thread t1=new Thread(soundobj);
+            t1.start();
+
             t.setOnFinished(actionEvent -> {
                 SceneManager.setContinueflag(false);
-
+                System.out.println("Collision fall");
 
             });
 
@@ -475,6 +659,7 @@ public class SceneManager {
             checkCollisionCherry(ap,ch);
         }
     };
+
     public void addScoreDisplay(){
         Rectangle r=new Rectangle();
         r.setArcHeight(20);
@@ -486,28 +671,32 @@ public class SceneManager {
         r.setLayoutX(205);
         r.setLayoutY(144);
         mainpage.getChildren().add(r);
-        scorecount = createText("Score: " + (OurHero.getScore()), 230.0, 190.0, 40.0, new Glow(0));
+
+        scorecount = createText("Score: " + (obh.getScore()), 230.0, 190.0, 40.0, new Glow(0));
         scorecount.setFill(Color.WHITE);
         mainpage.getChildren().add(scorecount);
     }
     public void checkCollisionCherry(AnchorPane ap,ImageView ch){
         mainpage.getChildren().remove(scorecount);
-        scorecount = createText("Score: " + (OurHero.getScore()), 230.0, 190.0, 40.0, new Glow(0));
+        scorecount = createText("Score: " + (obh.getScore()), 230.0, 190.0, 40.0, new Glow(0));
         scorecount.setFill(Color.WHITE);
         mainpage.getChildren().add(scorecount);
         if(ch!=null) {
-            if (ap.getBoundsInParent().intersects(ch.getBoundsInParent())&&counted==false) {
+            if (ap.getBoundsInParent().intersects(ch.getBoundsInParent())&&counted==false&&OurHero.isFlipped()) {
                 counted=true;
-                OurHero.setCherrycount(OurHero.getCherrycount() + 1);
+                System.out.println("Ch: "+OurHero.getInstance().getCherrycount());
+                OurHero.getInstance().setCherrycount(OurHero.getInstance().getCherrycount() + 1);
                 mainpage.getChildren().remove(cherrycount);
                 mainpage.getChildren().remove(ch);
-                cherrycount = createText(": " + (OurHero.getCherrycount()), 550.0, 50.0, 30.0, new Glow(0));
+                SoundDesign soundObjj=new SoundDesign(4);
+                new Thread(soundObjj).start();
+                cherrycount = createText(": " + (OurHero.getInstance().getCherrycount()), 550.0, 50.0, 30.0, new Glow(0));
                 cherrycount.setFill(Color.WHITE);
-
                 mainpage.getChildren().add(cherrycount);
             }
         }
     }
+
 
     public void addInstruction(){
         rinst=new Rectangle();
@@ -567,4 +756,30 @@ public class SceneManager {
         mainpage.getChildren().remove(cherrycount);
     }
 
+    public void perfectLand(){
+        OurHero ob=OurHero.getInstance();
+        if(SceneManager.rec.getHeight()+SceneManager.rec.getX()+5>=Pillars.getLastpillar().getX()+Pillars.getLastpillar().getWidth()/2-10 && SceneManager.rec.getHeight()+SceneManager.rec.getX()+5<=Pillars.getLastpillar().getX()+Pillars.getLastpillar().getWidth()/2+10){
+            ob.setScore(ob.getScore()+1);
+            Text t=createText("Perfect!\n   +1", 0, 0, 20.0, new Glow(0));
+            t.setX(Pillars.getLastpillar().getX()+Pillars.getLastpillar().getWidth()/2-30);
+            t.setY(Pillars.getLastpillar().getY()-500);
+            t.setFill(Color.BLACK);
+            mainpage.getChildren().add(t);
+            SoundDesign obkjj=new SoundDesign(6);
+            new Thread(obkjj).start();
+            TranslateTransition trntext=new TranslateTransition(Duration.millis(1000),t);
+            trntext.setByY(-50);
+            FadeTransition f1 = new FadeTransition(Duration.millis(1100), t);
+            f1.setFromValue(1);
+            f1.setToValue(0);
+            trntext.play();
+            f1.play();
+            f1.setOnFinished(actionEvent -> {
+                mainpage.getChildren().removeAll(t);
+
+            });
+
+
+        }
+    }
 }

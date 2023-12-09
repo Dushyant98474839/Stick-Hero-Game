@@ -1,5 +1,6 @@
 package com.example.stickhero;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.Button;
@@ -22,12 +23,14 @@ public class Sticks {
     public double getAngle() {
         return angle;
     }
-
+    private static Timeline t;
+    private static boolean flag=false;
     public void growStick(Rectangle rect){
         System.out.println("Stickcalss");
-        rect.setHeight(rect.getHeight()+5);
-        rect.setY(rect.getY()-5);
+        rect.setHeight(rect.getHeight()+4);
+        rect.setY(rect.getY()-4);
     }
+
     public void fallStick(Rectangle rect){
         double heropY=Pillars.getHeropillar().getY();
         double heropX=Pillars.getHeropillar().getX();
@@ -36,7 +39,7 @@ public class Sticks {
         distance = Math.sqrt(Math.pow((heropX - lastpX), 2) + Math.pow((heropY - lastpY), 2));
         angle=90;
 
-        Timeline t= new Timeline(new KeyFrame(Duration.millis(12.5), event -> {
+        t= new Timeline(new KeyFrame(Duration.millis(7.5), event -> {
             Rotate rotate = new Rotate();
             rotate.setPivotX(rect.getX() + 5);
             rotate.setPivotY(rect.getY() + rect.getHeight());
@@ -44,8 +47,47 @@ public class Sticks {
             rect.getTransforms().add(rotate);
         }));
         t.setCycleCount(90);
+        System.out.println("Stick rotate start");
         t.play();
+        SoundDesign objb=new SoundDesign(9);
+        new Thread(objb).start();
+        t.setOnFinished(actionEvent -> {
+            SoundDesign soundObjj=new SoundDesign(1);
+            new Thread(soundObjj).start();
+            System.out.println("Stick Rotate finsihed");
+                if(SceneManager.isContinueflag()) {
+                    Buttons.setCanFlip(true);
+                    System.out.println("Hero can now flip");
+                    System.out.println("Hero moving");
+                    OurHero.moveHero();
+                }
+                else {
+                    System.out.println("Stick animation stopped");
+                    t.stop();
+                    OurHero.setFlipped(false);
+                }
+            });
 
+
+//        else {
+//            t.setOnFinished(actionEvent -> {
+//                SceneManager.setContinueflag(false);
+//            });
+//        }
+    }
+    public static void stopStickAnimation(){
+        flag=false;
+        if(t!=null){
+            t.pause();
+            flag=true;
+        }
+    }
+    public static void resumeStickAnimation(){
+        if(t!=null){
+        if (Animation.Status.PAUSED==t.getStatus()){
+            t.play();
+        }
+        }
     }
 
 }
